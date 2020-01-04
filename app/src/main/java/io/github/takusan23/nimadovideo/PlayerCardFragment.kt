@@ -111,6 +111,11 @@ class PlayerCardFragment : Fragment() {
         }
     }
 
+    fun reSize(height: Int, Width: Int) {
+        val layoutParams = LinearLayout.LayoutParams(Width, height)
+        exoplayerview.layoutParams = layoutParams
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         exoPlayer.release()

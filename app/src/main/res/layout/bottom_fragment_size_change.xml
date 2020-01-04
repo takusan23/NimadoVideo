@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="10sp"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="動画のサイズ変更"
+        android:textSize="24sp" />
+
+    <Button
+        android:id="@+id/bottom_fragment_size_saitekika"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="16:9 デバイスに最適化" />
+
+    <Button
+        android:id="@+id/bottom_fragment_size_four"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="4動画" />
+
+    <Button
+        android:id="@+id/bottom_fragment_size_three"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="3動画" />
+</LinearLayout>
