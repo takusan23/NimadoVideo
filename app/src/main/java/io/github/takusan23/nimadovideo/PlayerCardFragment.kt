@@ -6,16 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.ExoPlayerFactory
-import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 import kotlinx.android.synthetic.main.fragment_player_video.*
 import android.util.DisplayMetrics
 import android.widget.LinearLayout
-import com.google.android.exoplayer2.Player
+import android.widget.Toast
+import com.google.android.exoplayer2.*
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -24,6 +22,9 @@ class PlayerCardFragment : Fragment() {
     val READ_REQUEST_CODE = 810
 
     lateinit var exoPlayer: SimpleExoPlayer
+
+    // 再生速度
+    var speed = 1f
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,21 +45,26 @@ class PlayerCardFragment : Fragment() {
             LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (width / 16) * 9)
         exoplayerview.layoutParams = layoutParams
 
-        //位置？何番目か
-        val pos = arguments?.getInt("pos")
-
         openSAF()
         fragment_player_open_file.setOnClickListener {
             openSAF()
+            // 初期化済みなら再生止める
+            if (::exoPlayer.isInitialized) {
+                exoPlayer.playWhenReady = false
+                exoPlayer.release()
+            }
         }
 
         //削除
         fragment_player_close.setOnClickListener {
             val mainActivity = activity as MainActivity
-            if (pos != null) {
-                mainActivity.parent_linearlayout.removeViewAt(pos)
+            mainActivity.parent_linearlayout.removeView(fragment_player_parent)
+            fragmentManager?.beginTransaction()?.remove(this)?.commit()
+            // 初期化済みなら再生止める
+            if (::exoPlayer.isInitialized) {
+                exoPlayer.playWhenReady = false
+                exoPlayer.release()
             }
-            fragmentManager?.beginTransaction()?.remove(this)?.commit();
         }
 
     }
@@ -105,6 +111,29 @@ class PlayerCardFragment : Fragment() {
                     } else {
                         fragment_player_repeat.setImageDrawable(context?.getDrawable(R.drawable.ic_repeat_24px))
                         repeatMode = Player.REPEAT_MODE_OFF
+                    }
+                }
+            }
+            fragment_player_speed.setOnClickListener {
+                exoPlayer.apply {
+                    if (speed == 1f) {
+                        // 2倍にする
+                        speed = 2f
+                        val playbackParameters = PlaybackParameters(speed)
+                        exoPlayer.playbackParameters = playbackParameters
+                        Toast.makeText(context, "x2", Toast.LENGTH_SHORT).show()
+                    } else if (speed == 2f) {
+                        // 5倍に
+                        speed = 5f
+                        val playbackParameters = PlaybackParameters(speed)
+                        exoPlayer.playbackParameters = playbackParameters
+                        Toast.makeText(context, "x5", Toast.LENGTH_SHORT).show()
+                    } else {
+                        // 初期
+                        speed = 1f
+                        val playbackParameters = PlaybackParameters(speed)
+                        exoPlayer.playbackParameters = playbackParameters
+                        Toast.makeText(context, "x1", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
